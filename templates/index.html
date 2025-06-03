@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="section">
+    <h1 class="header center red-text text-darken-2" style="font-size: 2.8rem;">YouTube Video & Audio Downloader</h1>
+    <div class="row center">
+        <!-- <h5 class="header col s12 light">Enter a YouTube video link below to get started.</h5> -->
+    </div>
+
+    <div class="row">
+        <form class="col s12" method="POST" action="{{ url_for('index') }}" id="urlForm">
+            <div class="row">
+                <div class="input-field col s12 m10 l11">
+                    <i class="material-icons prefix">link</i>
+                    <input id="youtube_url" type="url" name="youtube_url" class="validate" required
+                           value="{{ youtube_url if youtube_url else '' }}">
+                    <label for="youtube_url">YouTube Video URL</label>
+                </div>
+                <div class="input-field col s12 m2 l1">
+                    <button class="btn waves-effect waves-light red darken-1" type="submit" name="action" style="width:100%;">
+                        Fetch
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if error %}
+    <div class="row center">
+        <div class="col s12">
+            <div class="card-panel red lighten-1 white-text">
+                <i class="material-icons left">error_outline</i>{{ error }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if video_info %}
+    <div id="videoPreview" class="section">
+        <h2 class="header light red-text text-darken-1" style="font-size: 2rem;">Video Preview & Download Options</h2>
+        <div class="card horizontal">
+            <div class="card-image waves-effect waves-block waves-light">
+                <img class="activator" src="{{ video_info.thumbnail_url }}" alt="Video Thumbnail for {{ video_info.title }}" style="max-width:320px; object-fit:cover;">
+            </div>
+            <div class="card-stacked">
+                <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">{{ video_info.title | truncate(60) }}<i class="material-icons right">more_vert</i></span>
+                    <p><strong>Author:</strong> {{ video_info.author }}</p>
+                    <p><strong>Length:</strong> {{ video_info.length_formatted }}</p>
+                    <p><strong>Views:</strong> {{ '{:,}'.format(video_info.views) }}</p>
+                </div>
+                <div class="card-action">
+                    <p class="red-text text-darken-2">Select format and quality:</p>
+                </div>
+            </div>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">{{ video_info.title }}<i class="material-icons right">close</i></span>
+                <p><strong>Full Title:</strong> {{ video_info.title }}</p>
+                <p><strong>Description:</strong> {{ video_info.description | truncate(200) }}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Video Downloads -->
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title"><i class="material-icons left">videocam</i>Download Video</span>
+                        {% if video_info.video_streams %}
+                            <div class="collection">
+                            {% for stream in video_info.video_streams %}
+                                <a href="{{ url_for('download_file', video_id=video_info.video_id, itag=stream.itag, type='video') }}"
+                                   class="collection-item waves-effect waves-light black-text download-link"
+                                   data-filename="{{ video_info.filename_base }}_{{ stream.resolution }}.{{ stream.subtype }}">
+                                    MP4 - {{ stream.resolution }} ({{ (stream.filesize / (1024*1024)) | round(2) }} MB)
+                                    <span class="secondary-content"><i class="material-icons red-text">file_download</i></span>
+                                </a>
+                            {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>No direct video streams available (MP4, progressive).</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audio Download -->
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title"><i class="material-icons left">audiotrack</i>Download Audio</span>
+                        {% if video_info.audio_stream %}
+                            <a href="{{ url_for('download_file', video_id=video_info.video_id, itag=video_info.audio_stream.itag, type='audio') }}"
+                               class="btn-large waves-effect waves-light red darken-1 download-link" style="width:100%; margin-bottom: 10px;"
+                               data-filename="{{ video_info.filename_base }}.{{ video_info.audio_stream.subtype }}">
+                                Highest Quality Audio ({{ video_info.audio_stream.abr }}, {{ (video_info.audio_stream.filesize / (1024*1024)) | round(2) }} MB)
+                                <i class="material-icons right">file_download</i>
+                            </a>
+                        {% else %}
+                            <p>No audio streams available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Progress Bar Section -->
+    <div id="progressSection" class="section" style="display: none;">
+        <h3 class="header light">Download Progress</h3>
+        <p id="progressFilename"></p>
+        <div class="progress red lighten-3">
+            <div class="determinate red darken-2" style="width: 0%" id="progressBar"></div>
+        </div>
+        <p id="progressStatus" class="center-align"></p>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Meta Tags -->
+    <title>YouTube Video Downloader | Download YouTube Videos & Audio</title>
+    <meta name="description" content="Easily download YouTube videos in various resolutions or extract audio in highest quality. Fast, free, and user-friendly YouTube downloader.">
+    <meta name="keywords" content="youtube downloader, download youtube video, youtube to mp4, youtube to mp3, video downloader, pytube, flask, webapp">
+    <meta name="author" content="YourAppName">
+    <!-- Robots Meta Tag (adjust as needed for production) -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="https://www.youtube.com/s/desktop/014dbbed/img/favicon_32x32.png" type="image/png">
+</head>
+<body>
+    <nav class="nav-extended red darken-3">
+        <div class="nav-wrapper container">
+            <a href="{{ url_for('index') }}" class="brand-logo"><i class="material-icons left">play_circle_filled</i>YTDrip by MetaXsouL</a>
+            <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="https://github.com/J0Ysutradhar/" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <ul class="sidenav red darken-4" id="mobile-nav">
+        <li><a href="{{ url_for('index') }}" class="white-text"><i class="material-icons white-text left">home</i>Home</a></li>
+        <li><a href="https://github.com/J0Ysutradhar/YOUTUBEDOWNLOADER" target="_blank" class="white-text"><i class="material-icons white-text left">code</i>GitHub</a></li>
+    </ul>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="page-footer red darken-3">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">YTDrip</h5>
+                    <p class="grey-text text-lighten-4">A simple and efficient way to download YouTube videos and audio.</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="{{ url_for('index') }}">Home</a></li>
+                        <li><a class="grey-text text-lighten-3" href="{{ url_for('privacy') }}">Privacy Policy</a></li>
+                        <li><a class="grey-text text-lighten-3" href="{{ url_for('privacy') }}">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright red darken-4">
+            <div class="container">
+                © {{ annee_actuelle }} YTDrip - All rights reserved by MetaXsouL
+                <a class="grey-text text-lighten-4 right" href="https://github.com/J0Ysutradhar/YOUTUBEDOWNLOADER" target="_blank">Source Code</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(elems);
+            var selectElems = document.querySelectorAll('select');
+            M.FormSelect.init(selectElems);
+        });
+    </script>
+</body>
+</html>
