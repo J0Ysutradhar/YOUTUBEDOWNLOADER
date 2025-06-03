@@ -1,5 +1,5 @@
 flask==3.1.0
-pytubefix==9.0.1
+pytubefix==6.15a1
 requests
 pytube==15.0.0
 
